@@ -1,0 +1,30 @@
+☀️ Guía para Presentación: IA de Energía Solar (Pereira)
+Diapositiva 1: Portada
+Título: Sistema Inteligente de Análisis y Predicción Energética
+Subtítulo: Diplomado en Inteligencia Artificial - TalentoTech
+Presentado por: [Tu Nombre]
+Ubicación: Pereira, Colombia
+Diapositiva 2: El Problema
+Punto clave: Falta de herramientas precisas para calcular el ahorro real de energía solar en el contexto colombiano.
+Desafío: La mayoría de calculadoras son estáticas y no consideran factores económicos como la inflación de la energía o la volatilidad del dólar (TRM).
+Diapositiva 3: Nuestra Solución (3 en 1)
+Chatbot de Consulta: Asistente entrenado para resolver dudas sobre normatividad y beneficios de la energía solar.
+Simulador Económico: Modelo predictivo que estima el ahorro mensual ajustado a indicadores reales.
+Dashboard de Análisis: Visualización del estado actual de las instalaciones solares en Pereira.
+Diapositiva 4: Tecnología y Datos
+Stack Tecnológico: Python, Scikit-Learn, Pandas, Gradio.
+Datasets:
+Registros de instalaciones reales en Pereira.
+Indicadores Económicos (2018-2100): Datos históricos y proyectados de IPC, TRM y PIB para mayor precisión.
+Diapositiva 5: El Cerebro (Machine Learning)
+Modelo: Regresión Random Forest / Clasificador.
+Variables: Cantidad de paneles, radiación solar, eficiencia, temperatura y factores económicos.
+R2 Score: [Menciona el puntaje que sale en tu terminal, ej: 0.97] (Indica una alta precisión en las predicciones).
+Diapositiva 6: Demostración de la Interfaz
+Aquí puedes poner capturas de pantalla de tu app:
+Pestaña 1: El Chatbot interactuando.
+Pestaña 2: El simulador con sus sliders y el gráfico de ahorro.
+Pestaña 3: El Dashboard con la matriz de correlación y distribuciones.
+Diapositiva 7: Conclusiones e Impacto
+Impacto: Fomenta la adopción de energías limpias mediante datos confiables.
+Escalabilidad: El sistema puede adaptarse a otras ciudades de Colombia simplemente actualizando la base de datos local.
