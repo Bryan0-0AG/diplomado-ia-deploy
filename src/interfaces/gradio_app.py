@@ -9,7 +9,7 @@ from src.analysis.visualizer import (
     obtener_graficos_numericos,
     obtener_graficos_analisis_target,
     obtener_graficos_correlacion,
-    obtener_grafico_nulos
+    obtener_graficos_correlacion_especifica
 )
 
 def load_resources():
@@ -85,8 +85,39 @@ def build_app():
     plt.close('all') # Limpiar figuras previas para evitar warnings de memoria
     modelo, prepro, df = load_resources()
 
-    with gr.Blocks() as demo:
-        gr.Markdown("# ☀️ Calculadora de Energia Solar Inteligente (Pereira)")
+    custom_css = """
+    #header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        background: linear-gradient(135deg, #FFF9C4 0%, #FFF176 100%);
+        padding: 1rem;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    #header img {
+        border-radius: 10px;
+        max-height: 100px;
+        width: auto !important;
+    }
+    #header h1 {
+        margin: 0 !important;
+        font-weight: 800;
+        color: #F57F17;
+        font-family: 'Outfit', sans-serif;
+    }
+    #title {
+        display: flex;
+        align-items: center;
+        background: transparent;
+    }
+    """
+    with gr.Blocks(title="SolarAI") as demo:
+        with gr.Row(elem_id="header"):
+            gr.Image("data/logo.png", height=50, show_label=False, container=False)
+            gr.Markdown("# SolarAI", elem_id="title")
 
         with gr.Tabs():
             with gr.TabItem("💬 Preguntale a la IA"):
@@ -124,39 +155,43 @@ def build_app():
                 
                 with gr.Tabs():
                     with gr.Tab("General"):
-                        with gr.Row():
-                            with gr.Column():
-                                gr.Markdown("### Matriz de Correlacion")
-                                gr.Plot(value=obtener_graficos_correlacion(df))
-                            with gr.Column():
-                                gr.Markdown("### Calidad de Datos (Nulos)")
-                                gr.Plot(value=obtener_grafico_nulos(df))
+                        gr.Markdown("### 📊 Matriz de Correlacion General")
+                        gr.Plot(value=obtener_graficos_correlacion(df))
+                        
+                        gr.Markdown("### 🎯 Correlacion: Variables Clave vs Ahorro")
+                        gr.Plot(value=obtener_graficos_correlacion_especifica(df))
                     
                     with gr.Tab("Distribuciones"):
-                        gr.Markdown("### Variables Categoricas Principales")
                         cat_figs = obtener_graficos_categoricos(df)
-                        with gr.Row():
-                            if len(cat_figs) > 0: gr.Plot(value=cat_figs[0], label="Año Instalacion")
-                            if len(cat_figs) > 2: gr.Plot(value=cat_figs[2], label="Material Panel")
-                            if len(cat_figs) > 3: gr.Plot(value=cat_figs[3], label="Tipo de Instalacion")
-                        
-                        gr.Markdown("### Variables Numericas (Distribucion)")
                         num_figs = obtener_graficos_numericos(df)
-                        with gr.Row():
-                            # Mostrar 2 graficos numericos interesantes (ej. Radiacion y Humedad)
-                            # Asumiendo que existen por el dataset
-                            if len(num_figs) > 4: gr.Plot(value=num_figs[4], label="Radiacion Solar")
-                            if len(num_figs) > 6: gr.Plot(value=num_figs[6], label="Humedad Relativa")
+                        
+                        with gr.Tabs():
+                            with gr.Tab("Técnicas / Instalación"):
+                                gr.Markdown("### 🛠️ Variables de Instalación")
+                                with gr.Row():
+                                    if 'Año Instalación' in cat_figs: gr.Plot(value=cat_figs['Año Instalación'], label="Año de Instalación")
+                                    if 'Material Panel' in cat_figs: gr.Plot(value=cat_figs['Material Panel'], label="Material del Panel")
+                                    if 'Tipo' in cat_figs: gr.Plot(value=cat_figs['Tipo'], label="Tipo de Instalación")
+                                with gr.Row():
+                                    if 'N° Paneles' in num_figs: gr.Plot(value=num_figs['N° Paneles'], label="N° de Paneles")
+                                    if 'Eficiencia Panel (%)' in num_figs: gr.Plot(value=num_figs['Eficiencia Panel (%)'], label="Eficiencia (%)")
 
-                    with gr.Tab("Analisis de Ahorro"):
-                        gr.Markdown("### Comportamiento del Ahorro Mensual")
-                        target_figs = obtener_graficos_analisis_target(df)
-                        with gr.Row():
-                            for fig in target_figs:
-                                gr.Plot(value=fig)
+                            with gr.Tab("Climatológicas"):
+                                gr.Markdown("### ☁️ Variables del Clima")
+                                with gr.Row():
+                                    if 'Radiación Solar' in num_figs: gr.Plot(value=num_figs['Radiación Solar'], label="Radiación Solar")
+                                    if 'Humedad Relativa Prom' in num_figs: gr.Plot(value=num_figs['Humedad Relativa Prom'], label="Humedad Relativa")
+                                    if 'Temperatura Prom' in num_figs: gr.Plot(value=num_figs['Temperatura Prom'], label="Temperatura Promedio")
+
+                            with gr.Tab("Económicas"):
+                                gr.Markdown("### 💰 Variables Económicas y Ahorro")
+                                with gr.Row():
+                                    if 'ipc_energia_pct' in num_figs: gr.Plot(value=num_figs['ipc_energia_pct'], label="IPC Energía (%)")
+                                    if 'trm_promedio_cop' in num_figs: gr.Plot(value=num_figs['trm_promedio_cop'], label="TRM Promedio")
+                                    if 'Factura Ahorrada Mensual' in num_figs: gr.Plot(value=num_figs['Factura Ahorrada Mensual'], label="Ahorro Mensual (COP)")
 
             with gr.TabItem("📘 Acerca de"):
-                gr.Markdown("### ☀️ Sobre este Proyecto")
+                gr.Markdown("### ☀️ Sobre SolarAI")
                 gr.Markdown("""
                 Esta aplicacion utiliza Inteligencia Artificial para predecir el ahorro economico de instalaciones solares en Pereira, Colombia.
                 
@@ -168,5 +203,5 @@ def build_app():
                 *Desarrollado para el Diplomado en IA - TalentoTech.*
                 """)
 
-    return demo
+    return demo, custom_css
 

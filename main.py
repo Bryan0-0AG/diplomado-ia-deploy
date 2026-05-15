@@ -25,9 +25,10 @@ def main():
         import gradio as gr
         
         # Construir y lanzar la aplicacion directamente
-        demo = build_app()
+        demo, custom_css = build_app()
         print("\n¡Todo listo! Accede al link que aparece abajo:")
-        demo.launch(share=False, theme=gr.themes.Soft())
+        demo.launch(share=True, theme=gr.themes.Soft(), css=custom_css)
 
 if __name__ == "__main__":
     main()
+# radiacion
